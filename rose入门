@@ -1,0 +1,309 @@
+1、pom文件设置：
+添加父pom文件
+<parent>
+  <groupId>com.sohu</groupId>
+	<artifactId>focus-root-pom</artifactId>
+	<version>1.0-SNAPSHOT</version>
+  </parent>
+
+添加：
+<dependency>
+        <groupId>net.paoding</groupId>
+	<artifactId>paoding-rose-jade</artifactId>
+</dependency>
+<dependency>
+	<groupId>net.paoding</groupId>
+	<artifactId>paoding-rose-jade</artifactId>
+</dependency>
+
+添加maven plugin
+
+	 <build>
+		<finalName>focusdemo</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<verbose>true</verbose>
+					<encoding>UTF-8</encoding>
+					<compilerArguments>
+						<sourcepath>${project.basedir}/src/main/java</sourcepath>
+					</compilerArguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Rose>*</Rose>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution> 
+				</executions>
+			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <archiveClasses>true</archiveClasses>
+                </configuration>
+            </plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.14.1</version>
+				<configuration>
+					<includes>
+						<include>**/*Tests.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+            
+		</plugins>
+	</build>
+
+
+添加jetty配置：
+
+	    <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.11.v20130520</version>
+                <configuration>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>DEBUG</name>
+                            <value>TRUE</value>
+                        </systemProperty>
+                    </systemProperties>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <stopKey>focus</stopKey>
+                    <stopPort>9999</stopPort>
+                    <scanTargetPatterns>
+                        <scanTargetPattern>
+                            <directory>src/main/webapp/WEB-INF</directory>
+                            <excludes>
+                                <exclude>**/*.jsp</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*.properties</include>
+                                <include>**/*.xml</include>
+                            </includes>
+                        </scanTargetPattern>
+                    </scanTargetPatterns>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>start-jetty</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <scanIntervalSeconds>0</scanIntervalSeconds>
+                            <daemon>true</daemon>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>stop-jetty</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+添加其他需要依赖的包（依赖包的版本已在父fom中定义）
+        <dependency>
+	        <groupId>org.springframework</groupId>
+		<artifactId>spring-core</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-web</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-webmvc</artifactId>
+	</dependency>
+	<dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet.jsp</groupId>
+		<artifactId>jsp-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-test</artifactId>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<scope>test</scope>
+	</dependency>
+
+2、在webapp/WEB-INF文件夹下建立web.xml:
+<web-app version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_5.xsd">
+
+	<display-name>Spring MVC Application</display-name>
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>WEB-INF/log4j.properties</param-value>
+    </context-param>
+    <context-param>
+        <param-name>log4jRefreshInterval</param-name>
+        <param-value>3000</param-value>
+    </context-param>
+    <listener>
+        <listener-class>
+            org.springframework.web.util.Log4jConfigListener
+        </listener-class>
+    </listener>
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>paodingRoseFilter</filter-name>
+        <filter-class>net.paoding.rose.RoseFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>paodingRoseFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <resource-ref>
+        <description>dataSource</description>
+        <res-ref-name>jdbc/focus_dc</res-ref-name>
+        <res-type>javax.sql.DataSource </res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+</web-app>
+
+3、添加log4j.properties文件
+log4j.rootLogger=DEBUG,CONSOLE
+#DEBUG,CONSOLE,FILE,ROLLING_FILE,MAIL,DATABASE
+log4j.addivity.org.apache=true
+log4j.logger.net.paoding.rose.jade=DEBUG
+log4j.logger.net.paoding.rose=DEBUG
+log4j.logger.org.springframework=ERROR
+log4j.logger.net.paoding.rose.controllers.ToolsController=DEBUG
+###################
+# Console Appender
+###################
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.Threshold=DEBUG
+log4j.appender.CONSOLE.Target=System.out
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+log4j.appender.CONSOLE.layout.ConversionPattern=[framework] %d - %c -%-4r [%t] %-5p %c %x - %m%n
+
+
+4、applicationContext.xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>jdbc/focus_dc</value>
+        </property>
+    </bean>
+    <bean id="jade.dataSourceFactory" class="net.paoding.rose.jade.context.spring.SpringDataSourceFactory"/>
+
+</beans>
+
+5、添加jetty-env.xml文档
+
+http://wiki.eclipse.org/Jetty/Reference/jetty-env.xml
+
+jndi key value形式的bind和获取
+
+6、在webapp下创建hello.jsp
+
+7、创建HelloController.java
+在com.chen上右键 -> new -> package -> com.chen.controllers [controllers是rose框架默认的加载controller的package name] 
+在com.chen.controllers上右键 -> new -> class -> HelloController [*Controller是rose框架默认的controller层的class后缀]  
+在public class HelloController添加注解@Path("")[Path注解是rose框架提供的标识每个controller的对外访问时的基础路径] 
+
+
+ [Get注解是rose框架提供的标识一个http访问是get还是post或者是其他，并且会将path与get中的字符串连接成一个url] 
+@Path("")
+public class HelloController {
+    
+    @Get()
+    public String index() {
+        return "@hello world";
+    }
+}
+上述代码可以从浏览器访问：http://localhost/。 
+
+@Path("/hello/")
+public class HelloController {
+    
+    @Get("world")
+    public String index() {
+        return "@hello world";
+    }
+}
+上述代码可以从浏览器访问：http://localhost/hello/world [注意path与get中的参数]
+
+
+
+
+
