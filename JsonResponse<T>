@@ -1,0 +1,57 @@
+/**
+ * 
+ */
+package com.sohu.model;
+
+import java.util.List;
+
+/**
+ * @author qiaowang
+ */
+@SuppressWarnings("serial")
+public class JsonResponse<T> extends BaseObject {
+
+    public List<T> data;
+
+    public int errorCode;
+
+    public String errorMessage;
+
+    /**
+     * 总记录数
+     */
+    public int pageTotal;
+
+    public List<T> getData() {
+        return data;
+    }
+
+    public void setData(List<T> data) {
+        this.data = data;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public int getPageTotal() {
+        return pageTotal;
+    }
+
+    public void setPageTotal(int pageTotal) {
+        this.pageTotal = pageTotal;
+    }
+
+}
