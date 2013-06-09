@@ -139,6 +139,16 @@
             </plugin>
 
 添加其他需要依赖的包（依赖包的版本已在父fom中定义）
+连接数据库：
+	<dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+其他：
         <dependency>
 	        <groupId>org.springframework</groupId>
 		<artifactId>spring-core</artifactId>
@@ -151,14 +161,7 @@
 		<groupId>org.springframework</groupId>
 		<artifactId>spring-webmvc</artifactId>
 	</dependency>
-	<dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
+	
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
