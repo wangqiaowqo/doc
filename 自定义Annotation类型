@@ -1,0 +1,305 @@
+自定义Annotation类型：标识符（marker Annotation）：@interface
+
+Annotation的使用：可以放在任何地方，如类的前面，方法的前面，变量、属性的前面等等。
+
+Annotation的定义：
+
+在定义Annotation型态的时候不能继承其它的Annotation型态或接口
+
+1、不带参数的定义与使用
+
+java 代码
+1.package com.test;    
+2.   
+3.public @interface AnnotationTest {    
+4.   
+5.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest   
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+ 2、带一个参数的定义与使用，请注意：
+
+如果定义的参数是"value"这个字符串，那么在使用时可以这样写：@AnnotationTest("hello")也可以这样写：@AnnotationTest(value = "hello")，如果定义的参数不是"value"这个字符串，那么在使用的时候必须显式赋值，也就是必须用@AnnotationTest(value = "hello") 这样的模式，如String value1(); 那么对应的是@AnnotationTest(value1 = "hello") 因为value是个默认的，所以在使用是可以显式也可以隐式
+
+java 代码
+1.package com.test;    
+2.   
+3.public @interface AnnotationTest {    
+4.    String value();    
+5.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest("hello")    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 3、带多个参数的定义与使用，请注意：
+
+ 带多个参数的话，定义的时候用的是数组，使用的时候，可以是作为单个的也可以作为数组的形式 
+
+java 代码
+1.package com.test;    
+2.   
+3.public @interface AnnotationTest {    
+4.    String[] value();    
+5.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest("hello")    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest({"hello"})    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest({"hello","world"})    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest(value = {"hello","world"})    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+4、定义默认值的使用
+
+java 代码
+1.package com.test;    
+2.   
+3.public @interface AnnotationTest {    
+4.    String value() default "yahaitt";    
+5.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest   
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest("hello")    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public @interface AnnotationTest {    
+4.    String value1() default "ttitfly";    
+5.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest   
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest(value1 = "hello")    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+4、枚举在Annotation中的使用
+
+java 代码
+1.package com.test;    
+2.   
+3.public @interface AnnotationTest {    
+4.    EnumTest value1();    
+5.}    
+6.   
+7.enum EnumTest    
+8.{    
+9.    Hello,Yahaitt,Ttitfly    
+10.}   
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest(value1 = EnumTest.Hello)    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public @interface AnnotationTest {    
+4.    EnumTest value1() default EnumTest.Yahaitt;    
+5.}    
+6.   
+7.enum EnumTest    
+8.{    
+9.    Hello,Yahaitt,Ttitfly    
+10.}   
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest   
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}    
+ 
+
+java 代码
+1.package com.test;    
+2.   
+3.public class AnnotationUsage {    
+4.    @AnnotationTest(value1 = EnumTest.Hello)    
+5.    public void method()    
+6.    {    
+7.        System.out.println("usage of annotation");    
+8.    }    
+9.    public static void main(String[] args)    
+10.    {    
+11.        AnnotationUsage au = new AnnotationUsage();         
+12.        au.method();    
+13.    }    
+14.}  
