@@ -1,0 +1,81 @@
+1.自定义注解:当注解中的属性名为value，为其赋值时，可以不指定属性名称直接写上属性值即可；除了value以外的其他属性值都需要使用name=value这种赋值方式，即明确指定属性名称。
+
+ 
+
+2.使用@interface关键字自行定义注解时，该注解隐含地继承了java.lang.annotation.Annotation接口。在定义注解时，不能继承其他的Annotation或是接口。
+
+ 
+
+3.如果我们定义了一个接口，并且让该接口继承自java.lang.annotation.Annotation接口，那么我们所定义的接口依然是接口而不是注解；Annotation本身是接口不是注解。可以与Enum类比。
+
+ 
+
+4.java.lang.annotation.Retention指定了在您定义Annotation时，指示编译程序该如何对待您的自定义的Annotation。
+
+Retention定义如下：
+
+[c-sharp] view plaincopyprint?
+01.package java.lang.annotation;  
+02.@Documented  
+03.@Retention(RetentionPolicy.RUNTIME)  
+04.@Target(ElementType.ANNOTATION_TYPE)  
+05.public @interface Retention {  
+06.    RetentionPolicy value();  
+07.}  
+package java.lang.annotation;
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.ANNOTATION_TYPE)
+public @interface Retention {
+    RetentionPolicy value();
+} 
+
+可以看到，Retention只有一个属性value，类型为RetentionPolicy，RetentionPolicy是一个枚举类型，只有三个值，分别为SOURCE、CLASS、RUNTIME，定义如下：
+
+[c-sharp] view plaincopyprint?
+01.package java.lang.annotation;  
+02.public enum RetentionPolicy {  
+03.    /** 
+04.     * 编译器要丢弃的注解。      
+05.    */  
+06.    SOURCE,  
+07.    /** 
+08.     * 编译器将把注解记录在类文件中，但在运行时 VM 不需要保留注解。 
+09.     */  
+10.    CLASS,  
+11.    /** 
+12.     * 编译器将把注解记录在class文件中，在运行时 VM 将保留注解，可以通过反射读取。 
+13.     */  
+14.    RUNTIME  
+15.}  
+package java.lang.annotation;
+public enum RetentionPolicy {
+    /**
+     * 编译器要丢弃的注解。     
+    */
+    SOURCE,
+    /**
+     * 编译器将把注解记录在类文件中，但在运行时 VM 不需要保留注解。
+     */
+    CLASS,
+    /**
+     * 编译器将把注解记录在class文件中，在运行时 VM 将保留注解，可以通过反射读取。
+     */
+    RUNTIME
+}
+
+5.自定义Annotation举例：
+
+ 
+
+[java] view plaincopyprint?
+01.package com.j2se.annotation;  
+02.import java.lang.annotation.Retention;  
+03.import java.lang.annotation.RetentionPolicy;  
+04.@Retention(RetentionPolicy.RUNTIME)  
+05.public @interface MyAnnotation {  
+06.    //定义属性，格式：属性类型+属性名称+括号   
+07.    String province();  
+08.      
+09.    String capital();  
+10.} 
