@@ -1,4 +1,11 @@
 解决：
+增加：
+<dependency>    
+	<groupId>org.apache.httpcomponents</groupId>   
+	<artifactId>httpclient</artifactId>    
+	<version>4.2.5</version> 
+</dependency> 
+
 
 http://www.baeldung.com/2012/04/16/how-to-use-resttemplate-with-basic-authentication-in-spring-3-1/
 
