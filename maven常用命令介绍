@@ -1,0 +1,74 @@
+maven常用命令介绍
+1 下载源代码：mvn dependency:sources -DdownloadSources=true -DdownloadJavadocs=true
+ 
+ 
+maven常用命令介绍
+这里主要是在eclipse中使用maven，因此只使用到了一部分命令，整理下来方便以后查阅。
+
+生成清除Eclipse项目结构：
+mvn eclipse:eclipse
+mvn eclipse:clean
+
+清理（删除target目录下编译内容）
+mvn clean
+
+仅打包Web页面文件
+mvn war:exploded
+
+编译项目
+mvn compile
+
+打包发布
+mvn package
+
+打包时跳过测试
+mvn package -Dmaven.test.skip=ture
+
+还有很多命令目前还没有使用到，以后遇到再补充
+
+本文地址：http://blog.csdn.net/kongxx/article/details/6993501
+
+Maven用了很久了，命令一直记不住，其实想想就那个几个常用的，今天写下来，帮着记忆吧
+
+•创建一个简单的Java工程：mvn archetype:create -DgroupId=com.mycompany.example -DartifactId=Example
+•创 建一个java的web工程：mvn archetype:create -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-webapp -DgroupId=com.mycompany.app -DartifactId=my-webapp
+•打包：mvn package
+•编译：mvn compile
+•编译测试程序：mvn test-compile
+•清空：mvn clean
+•运行测试：mvn test
+•生成站点目录: mvn site
+•生成站点目录并发布：mvn site-deploy
+•安装当前工程的输出文件到本地仓库: mvn install
+•安 装指定文件到本地仓库：mvn install:install-file -DgroupId=<groupId> -DartifactId=<artifactId> -Dversion=1.0.0 -Dpackaging=jar -Dfile=<myfile.jar>
+•查看实际pom信息: mvn help:effective-pom
+•分析项目的依赖信息：mvn dependency:analyze 或 mvn dependency:tree
+•跳过测试运行maven任务：    mvn -Dmaven.test.skip=true XXX
+•生成eclipse项目文件: mvn eclipse:eclipse
+•查看帮助信息：mvn help:help 或 mvn help:help -Ddetail=true
+•查看插件的帮助信息：mvn <plug-in>:help，比如：mvn dependency:help 或 mvn ant:help 等等。
+常用命令
+1. 创建Maven的普通java项目： 
+   mvn archetype:create 
+   -DgroupId=packageName 
+   -DartifactId=projectName  
+2. 创建Maven的Web项目：   
+    mvn archetype:create 
+    -DgroupId=packageName    
+    -DartifactId=webappName 
+    -DarchetypeArtifactId=maven-archetype-webapp    
+3. 编译源代码： mvn compile 
+4. 编译测试代码：mvn test-compile    
+5. 运行测试：mvn test   
+6. 产生site：mvn site   
+7. 打包：mvn package   
+8. 在本地Repository中安装jar：mvn install 
+9. 清除产生的项目：mvn clean   
+10. 生成eclipse项目：mvn eclipse:eclipse  
+11. 生成idea项目：mvn idea:idea  
+12. 组合使用goal命令，如只打包不测试：mvn -Dtest package   
+13. 编译测试的内容：mvn test-compile  
+14. 只打jar包: mvn jar:jar  
+15. 只测试而不编译，也不测试编译：mvn test -skipping compile -skipping test-compile 
+      ( -skipping 的灵活运用，当然也可以用于其他组合命令)  
+16. 清除eclipse的一些系统设置:mvn eclipse:clean
