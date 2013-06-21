@@ -1,0 +1,23 @@
+Object是所有类的基类，这个你可以查询jdk文档了解，所有类都继承自Object。
+Object ...objects这种参数定义是在不确定方法参数的情况下的一种多态表现形式
+。即这个方法可以传递多个参数，这个参数的个数是不确定的。
+这样你在方法体中需要相应的做些处理。因为Object是基类，
+所以使用Object ...objects这样的参数形式，允许一切继承自Object的对象作为参数。
+这种方法在实际中应该还是比较少用的。Object[] obj这样的形式，就是一个Object数组构成的参数形式
+。说明这个方法的参数是固定的，是一个Object数组，至于这个数组中存储的元素，可以是继承自Object的所有类的对象。
+
+
+public class CacheUtils {
+
+    public static String toKey(Object... params) {
+        if (params == null) {
+            throw new NullPointerException("params is null");
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < params.length - 1; i++) {
+            builder.append(params[i]).append(":");
+        }
+        builder.append(params[params.length - 1]);
+        return builder.toString();
+    }
+}
