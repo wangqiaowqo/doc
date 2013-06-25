@@ -1,0 +1,9 @@
+原文如下
+http://www.cnblogs.com/ggjucheng/archive/2012/11/11/2765237.html
+
+EXPLAIN  SELECT ……
+变体：
+1. EXPLAIN EXTENDED SELECT ……
+将执行计划“反编译”成SELECT语句，运行SHOW WARNINGS 可得到被MySQL优化器优化后的查询语句 
+2. EXPLAIN PARTITIONS SELECT ……
+用于分区表的EXPLAIN
