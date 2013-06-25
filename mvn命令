@@ -1,0 +1,2 @@
+mvn -o clean package  离线
+mvn -U clean package  update snapshots
