@@ -1,1 +1,90 @@
 http://code.google.com/p/xmemcached/wiki/User_Guide_zh
+XMemcached简介
+XMemcached是一个新java memcached client。也许你还不知道memcached是什么？可以先看看这里。
+简单来说，Memcached 是一个高性能的分布式内存对象的key-value缓存系统，用于动态Web应用以减轻数据库负载，
+现在也有很多人将它作为内存式数据库在使用，memcached通过它的自定义协议与客户端交互，
+而XMemcached就是它的一个java客户端实现。 
+
+动态增删节点
+XMemcached允许通过JMX或者代码编程实现节点的动态添加或者移除，方便用户扩展和替换节点等。
+
+JMX
+JMX--Java Management Extensions，即Java管理扩展,是一个为应用程序、设备、系统等植入管理功能的框架。
+JMX可以跨越一系列异构操作系统平台、系统体系结构
+JMX框架
+和网络传输协议，灵活的开发无缝集成的系统、网络和服务管理应用。
+
+http://baike.baidu.com/view/866268.htm
+http://www.blogjava.net/chengang/archive/2006/03/07/34061.html
+http://www.ibm.com/developerworks/cn/java/j-lo-jse63/index.html
+
+
+JavaE6新特性
+http://www.ibm.com/developerworks/cn/java/j-lo-jse6/
+
+因为XMemcachedClient的创建有比较多的可选项，因此提供了一个XMemcachedClientBuilder类用于构建MemcachedClient。
+MemcachedClient是主要接口，操作memcached的主要方法都在这个接口，XMemcachedClient是它的一个实现。
+传入的memcached节点列表要求是类似"host1:port1 host2:port2 …"这样的字符串，通过AddrUtil.getAddresses方法获取实际的IP地址列表。 
+
+ // TODO Auto-generated method stub
+        MemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses("localhost:11211"));
+        MemcachedClient memcachedclient = builder.build();
+        
+存储数据是通过
+set方法，它有三个参数，第一个是存储的key名称，第二个是expire时间（单位秒），超过这个时间,memcached将这个数据替换出去，0表示永久存储（默认是一个月），
+第三个参数就是实际存储的数据，可以是任意的java可序列化类型。
+memcachedClient.set("hello", 0, "Hello,xmemcached");                 
+String value = memcachedClient.get("hello");                 
+System.out.println("hello=" + value);                 
+memcachedClient.delete("hello");                 
+value = memcachedClient.get("hello");                 
+System.out.println("hello=" + value); 
+
+获取存储的数据是通过get方法，传入key名称即可。如果要删除存储的数据，这是通过delete方法，它也是接受key名称作为参数。
+XMemcached由于是基于nio，因此通讯过程本身是异步的，client发送一个请求给memcached，
+你是无法确定memcached什么时候返回这个应答，客户端此时只有等待，因此还有个等待超时的概念在这里。
+客户端在发送请求后，开始等待应答，如果超过一定时间就认为操作失败，这个等待时间默认是5秒(1.3.8开始改为5秒，之前是1秒），
+上面例子展现的3个方法调用的都是默认的超时时间，这三个方法同样有允许传入超时时间的重载方法，例如 
+value=client.get(“hello”,3000);
+就是等待3秒超时，如果3秒超时就跑出TimeutException，用户需要自己处理这个异常。
+因为等待是通过调用CountDownLatch.await(timeout)方法，因此用户还需要处理中断异常InterruptException。
+最后的MemcachedException表示Xmemcached内部发生的异常，如解码编码错误、网络断开等等异常情况。 
+
+现在memcached已经支持touch协议，只需要传递key就更新缓存的超时时间： 
+client.touch(key,new-expire-time);
+
+有时候你希望获取缓存数据并更新超时时间，这时候可以用getAndTouch方法（仅二进制协议支持）： 
+client.getAndTouch(key,new-expire-time);
+
+客户端分布
+
+XMemcached同样支持客户端的分布策略，默认分布的策略是按照key的哈希值模以连接数得到的余数，对应的连接就是将要存储的节点。
+
+CAS操作
+
+Memcached是通过cas协议实现原子更新，所谓原子更新就是compare and set，原理类似乐观锁，
+每次请求存储某个数据同时要附带一个cas值，memcached比对这个cas值与当前存储数据的cas值是否相等
+，如果相等就让新的数据覆盖老的数据，如果不相等就认为更新失败，这在并发环境下特别有用。
+XMemcached提供了对CAS协议的支持（无论是文本协议还是二进制协议），CAS协议其实是分为两个步骤：
+获取CAS值和尝试更新，因此一个典型的使用场景如下： 
+
+GetsResponse<Integer> result = client.gets("a");   
+long cas = result.getCas();    
+//尝试将a的值更新为2   
+if (!client.cas("a", 0, 2, cas)) {         
+  System.err.println("cas error");   
+}
+
+  MemcachedClientBuilder builder = new XMemcachedClientBuilder( AddrUtil.getAddresses(“localhost:12000”));  
+  MemcachedClient client = builder.build();                       
+  client.flushAll();   
+  if (!client.set("hello", 0, "world")) {System.err.println("set error");}  
+  if (client.add("hello", 0, "dennis")) {System.err.println("Add error,key is existed");} 
+  if (!client.replace("hello", 0, "dennis")) { System.err.println("replace error"); }  
+  client.append("hello", " good");   
+  client.prepend("hello", "hello ");   
+  String name = client.get("hello", new StringTranscoder());   
+  System.out.println(name);   
+  client.deleteWithNoReply(“hello”);
+
+
