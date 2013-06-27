@@ -87,4 +87,30 @@ if (!client.cas("a", 0, 2, cas)) {
   System.out.println(name);   
   client.deleteWithNoReply(“hello”);
 
+测试的例子：
+
+public static void main(String[] args) throws IOException, TimeoutException, InterruptedException, MemcachedException {
+        // TODO Auto-generated method stub
+        MemcachedClientBuilder builder = new XMemcachedClientBuilder(AddrUtil.getAddresses("10.10.90.156:11211"));
+        builder.setConnectionPoolSize(5);
+        MemcachedClient client = builder.build();
+       
+        if(!client.set("hello", 0, "world")){
+            System.err.print("set error");
+        }
+        
+        String name = client.get("hello", new StringTranscoder()); 
+        System.out.println(name); 
+        
+        Map<InetSocketAddress,Map<String,String>> result=client.getStats();
+        
+        KeyIterator it=client.getKeyIterator(AddrUtil.getOneAddress("10.10.90.156:11211")); 
+            while(it.hasNext()) {    
+                String key=it.next();
+                System.out.println(key);
+        }
+        System.out.println(result);
+    }
+    
+    
 
